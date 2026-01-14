@@ -1,0 +1,99 @@
+﻿@model List<dynamic>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container mt-5 mb-5">
+
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-5">My Bookings</h2>
+        <p class="lead text-muted">All your service bookings with details and status.</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var booking in Model)
+            {
+                <div class="col-lg-4 col-md-6">
+
+                    <a asp-action="MyOrdersInfo"
+                       asp-controller="Settings"
+                       asp-route-serviceId="@booking.Service_Id"
+                       class="text-decoration-none text-dark">
+
+                        <div class="card shadow-sm border-0 rounded-4 h-100 p-3 p-lg-4 booking-card">
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h5 class="fw-bold mb-1">@booking.ServiceName</h5>
+                                    <small class="text-muted">ID: @booking.Service_Id</small>
+                                </div>
+
+                                <span class="badge
+                                @(booking.Booking_Status == "Accepted" ? "bg-success" :
+                                                                booking.Booking_Status == "Pending" ? "bg-warning text-dark" :
+                                                                booking.Booking_Status == "Rejected" ? "bg-danger" : "bg-secondary")">
+                                    @booking.Booking_Status
+                                </span>
+                            </div>
+
+                            <p class="mb-1"><strong>Date:</strong> @booking.Date.ToString("dd MMM yyyy")</p>
+                            <p class="mb-1"><strong>Time Slot 1:</strong> @booking.PreferredTimeSlot1.ToString(@"hh\:mm")</p>
+                            <p class="mb-1"><strong>Time Slot 2:</strong> @booking.PreferredTimeSlot2.ToString(@"hh\:mm")</p>
+                            <p class="mb-1"><strong>Payment:</strong> @booking.Payment</p>
+                            <p class="mb-1"><strong>Address:</strong> @booking.Address</p>
+                            <p class="mb-1"><strong>Phone:</strong> @booking.Phone</p>
+                            <p class="mb-1"><strong>Notes:</strong> @booking.Notes</p>
+                            <p class="mb-1"><strong>Price:</strong> @booking.Pricing</p>
+
+                        </div>
+                    </a>
+
+                </div>
+            }
+
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted fw-semibold">
+                You have no bookings yet.
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .booking-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .booking-card p {
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .booking-card h5 {
+            font-size: 1.15rem;
+        }
+
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.4em 0.7em;
+        border-radius: 0.5rem;
+    }
+
+    .btn-dark {
+        transition: all 0.2s ease;
+    }
+
+        .btn-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+</style>

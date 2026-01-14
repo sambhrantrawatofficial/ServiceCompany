@@ -1,0 +1,76 @@
+﻿@{
+    ViewData["Title"] = "All services";
+}
+<div class="text-center text-white py-5 mb-4">
+
+    <h1 class="fw-bold mb-2">All Services</h1>
+    <p class="text-muted mb-0">
+        Explore trusted home services, sorted A–Z for easy discovery
+    </p>
+
+</div>
+
+<div class="container">
+    <div class="row g-4">
+        @foreach (var item in ViewBag.AllServices)
+        {
+            <div class="col-md-4 col-sm-11 mb-3">
+                <div class="card service-card h-100 text-white border-0">
+
+                    <div class="img-wrapper">
+                        <img src="@item.ImagePath"
+                             alt="@item.ServiceName"
+                             class="card-img-top bw-img"
+                             onerror="this.src='https://via.placeholder.com/300x180';">
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h6 class="mb-1 fw-semibold">@item.ServiceName</h6>
+
+                        <small class="text-muted d-block">
+                            ₹ @item.Pricing
+                        </small>
+
+                        <!-- ⭐ Rating + Bookings -->
+                        <small class="text-muted d-block mt-1">
+                            @if (item.AvgRating > 0)
+                            {
+                                <span>⭐ @item.AvgRating.ToString("0.0")</span>
+                            }
+                            else
+                            {
+                                <span>No ratings yet</span>
+                            }
+                            &nbsp;•&nbsp;
+                            <span>@item.TotalBookings bookings</span>
+                        </small>
+
+                        <div class="mt-2 d-flex gap-2">
+                            <a asp-controller="Home"
+                               asp-action="ServiceMoreInfo"
+                               asp-route-id="@item.ServiceId"
+                               class="btn btn-outline-dark w-50">
+                                Info
+                            </a>
+
+                            <form asp-controller="Cart"
+                                  asp-action="AddToCart"
+                                  method="post"
+                                  class="w-50">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="serviceId" value="@item.ServiceId" />
+                                <button type="submit"
+                                        class="btn btn-dark w-100"
+                                        style="color:white!important">
+                                    Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

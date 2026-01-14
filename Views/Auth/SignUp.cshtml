@@ -1,0 +1,105 @@
+﻿@model SignUp
+@{
+    ViewData["Title"] = "Create Account";
+}
+<div class="container signup-container">
+    <h2 class="text-center mb-3">Create account</h2>
+
+    <!-- Nav Pills -->
+    <ul class="nav nav-pills mb-2 justify-content-center" id="roleTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="consumer-tab" data-bs-toggle="pill" data-bs-target="#consumer" type="button" role="tab">
+                Consumer
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="provider-tab" data-bs-toggle="pill" data-bs-target="#serviceprovider" type="button" role="tab">
+                Service Provider
+            </button>
+        </li>
+    </ul>
+
+    <div class="text-center form-text mb-3">@ViewData["Error"]</div>
+
+    <!-- Tab Content -->
+    <div class="tab-content align-content-center" id="roleTabContent">
+       
+        <!-- Consumer Form -->
+        <div class="tab-pane fade show active mb-3" id="consumer" role="tabpanel">
+            <form method="post" asp-action="SignUpConsumer" asp-controller="Auth" class="p-3 border rounded">
+                @Html.AntiForgeryToken()
+
+                <!--Name-->
+                <div class="mb-3">
+                    <label asp-for="Full_Name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" asp-for="Full_Name" placeholder="Enter your name" required>
+                </div>
+
+                <!--Email-->
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input type="email" class="form-control" asp-for="Email" placeholder="Enter your Email" required>
+                </div>
+
+                <!--Phone Number-->
+                <div class="mb-3">
+                    <label asp-for="Phone_Number" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" asp-for="Phone_Number" placeholder="Enter your Phone number" minlength="10" maxlength="15" required>
+                </div>
+
+                <!--Password-->
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Create Password</label>
+                    <input type="password" class="form-control" asp-for="Password" placeholder="Create your password" minlength="8" required>
+                </div>
+                <div class="text-center mt-3">
+                    <span class="small">Already have an account?</span>
+                    <a asp-controller="Login"
+                       asp-action="Index"
+                       class="ms-1 fw-semibold">
+                        Login here
+                    </a>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mt-1">Signup as Consumer</button>
+
+            </form>
+        </div>
+
+        <!-- Provider Form -->
+        <div class="tab-pane fade mb-3" id="serviceprovider" role="tabpanel">
+            <form method="post" asp-action="SignUpServiceProvider" class="p-3 border rounded">
+                @Html.AntiForgeryToken()
+
+                <!--Name-->
+                <div class="mb-3">
+                    <label asp-for="Full_Name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" asp-for="Full_Name" placeholder="Enter your name" required>
+                </div>
+
+                <!--Email-->
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email</label>
+                    <input type="email" class="form-control" asp-for="Email" placeholder="Enter your Email" required>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Phone_Number" class ="form-label">Phone Number</label>
+                    <input type="text" class="form-control" asp-for="Phone_Number" placeholder="Enter your Phone Number" minlength="10" maxlength="15" required>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Create Password</label>
+                    <input type="password" class="form-control" asp-for="Password" placeholder="Create your password" minlength="8" required>
+                </div>
+                <div class="text-center mt-3">
+                    <span class="small">Already have an account?</span>
+                    <a asp-controller="Login"
+                       asp-action="Index"
+                       class="ms-1 fw-semibold">
+                        Login here
+                    </a>
+                </div>
+                <button type="submit" class="btn btn-success w-100 mt-1">Signup as Service Provider</button>
+            </form>
+        </div>
+
+    </div>
+</div>

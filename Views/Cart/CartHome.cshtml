@@ -1,0 +1,86 @@
+﻿@{
+    ViewData["Title"] = "Cart Home";
+    var cartItems = ViewBag.CartItems as IEnumerable<dynamic>;
+}
+
+<div class="container">
+
+    <!-- PAGE HEADER -->
+    <div class="mb-4">
+        <h3 class="fw-bold">Your Cart</h3>
+        <p class="mb-0">Review services before booking</p>
+    </div>
+
+    <!-- CART ITEMS -->
+    <div class="row">
+        <div class="col-12">
+
+            <!-- Cart items -->
+            @if (cartItems != null && cartItems.Any())
+            {
+                foreach (var item in cartItems)
+                {
+                    <div class="card service-card mb-3">
+                        <div class="card-body d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">@item.ServiceName</h6>
+                                <small>
+                                    Category: @item.Category
+                                </small>
+
+                                <div class="mt-2 fw-semibold">
+                                    ₹ @item.Price
+                                </div>
+                            </div>
+                            <form asp-action="RemoveFromCart" asp-controller="Cart" method="post">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="cartId" value="@item.Cart_Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    Remove
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+
+                <!-- Price summary-->
+                <div class="row mt-4">
+                    <div class="col-12">
+
+                        <div class="card service-card">
+                            <div class="card-body">
+
+                                <h6 class="fw-bold mb-3">Price Summary</h6>
+
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Total Services</span>
+                                    <span>@cartItems?.Count()</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Total Price</span>
+                                    <strong>₹ @ViewBag.TotalPrice</strong>
+                                </div>
+
+                                <div class="d-flex">
+                                    <a asp-action="Index" asp-controller="Booking" class="btn btn-dark w-100" style="color:white!important">
+                                        Proceed to Checkout
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">Your cart is empty.</p>
+            }
+
+        </div>
+    </div>
+
+    <!--End tag-->
+</div>

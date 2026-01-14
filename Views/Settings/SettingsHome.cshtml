@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Settings & Support";
+}
+
+    <div class="container mt-4 mb-4">
+    <h2 class="mb-5 fw-bold">⚙️ Settings & Support</h2>   
+
+        <div class="row g-4">
+
+            <!-- TAB 1 : MY BOOKINGS -->
+            <div class="col-md-6">
+                <a asp-controller="Settings"
+                   asp-action="MyOrders"
+                   class="text-decoration-none">
+                    <div class="card service-card h-100 p-4 text-center">
+                        <h6 class="fw-bold">My Bookings</h6>
+                        <small>Check your bookings and their status</small>
+                    </div>
+                </a>
+            </div>
+
+            <!-- TAB 2 : CONTACT US -->
+            <div class="col-md-6">
+            <a asp-controller="Settings"
+                   asp-action="ContactUs"
+                   class="text-decoration-none">
+                    <div class="card service-card h-100 p-4 text-center">
+                        <h6 class="fw-bold">Contact Us</h6>
+                        <small>Need help? Reach out to us anytime</small>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+

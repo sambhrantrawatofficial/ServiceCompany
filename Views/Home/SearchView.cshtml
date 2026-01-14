@@ -1,0 +1,66 @@
+﻿@model IEnumerable<dynamic>
+
+<div class="container mt-4 mb-5">
+    <h3 class="mb-4">All Services</h3>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card service-card h-100 text-white border-0">
+
+                    <div class="img-wrapper">
+                        <img src="@item.ImagePath" alt="@item.ServiceName" class="card-img-top bw-img"
+                             onerror="this.src='https://via.placeholder.com/300x180';" />
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h6 class="mb-1 fw-semibold">@item.ServiceName</h6>
+                        <small class="text-muted d-block">₹ @item.Pricing</small>
+
+                        <small class="text-muted d-block mt-1">
+                            @if (item.AvgRating > 0)
+                            {
+                                <span>⭐ @item.AvgRating.ToString("0.0")</span>
+                            }
+                            else
+                            {
+                                <span>No ratings yet</span>
+                            }
+                            &nbsp;•&nbsp;
+                            <span>@item.TotalBookings bookings</span>
+                        </small>
+
+                        <div class="mt-2 d-flex gap-2">
+                            <a asp-controller="Home"
+                               asp-action="ServiceMoreInfo"
+                               asp-route-id="@item.Service_Id"
+                               class="btn btn-outline-dark w-50">
+                                Info
+                            </a>
+
+                            <form asp-controller="Cart"
+                                  asp-action="AddToCart"
+                                  method="post"
+                                  class="w-50">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="serviceId" value="@item.Service_Id" />
+                                <button type="submit"
+                                        class="btn btn-dark w-100"
+                                        style="color:white!important">
+                                    Add to Cart
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center mt-4">No services found.</p>
+    }
+</div>

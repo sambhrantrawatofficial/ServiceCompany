@@ -1,0 +1,170 @@
+﻿@model ServiceProvidingCompany.Models.ViewModels.DashboardViewModel
+@using Newtonsoft.Json
+
+<h3 class="mb-4 text-center">📊 Provider Dashboard</h3>
+
+<!-- Summary Cards -->
+<div class="row text-center mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Services</h6>
+                <h3>@Model.TotalServices</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h6>Total Bookings</h6>
+                <h3>@Model.TotalBookings</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm text-success">
+            <div class="card-body">
+                <h6>Total Earnings</h6>
+                <h3>₹ @Model.TotalEarnings</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm text-danger">
+            <div class="card-body">
+                <h6>Platform Dues (10%)</h6>
+                <h3>₹ @Model.PlatformDues</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row text-center mb-4">
+    <div class="col-md-12">
+        <div class="card shadow-sm text-primary">
+            <div class="card-body">
+                <h6>Net Earnings</h6>
+                <h2>₹ @Model.NetEarnings</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<!-- Status Counts -->
+<div class="row text-center mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm text-success">
+            <div class="card-body">
+                <h6>Accepted</h6>
+                <h4>@Model.AcceptedBookings</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm text-warning">
+            <div class="card-body">
+                <h6>Pending</h6>
+                <h4>@Model.PendingBookings</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm text-danger">
+            <div class="card-body">
+                <h6>Rejected</h6>
+                <h4>@Model.RejectedBookings</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm text-primary">
+            <div class="card-body">
+                <h6>Completed</h6>
+                <h4>@Model.CompeletedBookings</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<!-- Charts -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <canvas id="ratingChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const monthLabels = @Html.Raw(JsonConvert.SerializeObject(
+                                Model.MonthlyBookings.Select(x => "Month " + x.Month)));
+
+    const monthData = @Html.Raw(JsonConvert.SerializeObject(
+                                Model.MonthlyBookings.Select(x => x.Count)));
+
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'bar',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Bookings',
+                data: monthData,
+                backgroundColor: 'rgba(144, 238, 144, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    const ratingLabels = @Html.Raw(JsonConvert.SerializeObject(
+                                Model.RatingBreakdown.Select(x => x.Rating + " ★")));
+
+    const ratingData = @Html.Raw(JsonConvert.SerializeObject(
+                                Model.RatingBreakdown.Select(x => x.Count)));
+
+    new Chart(document.getElementById('ratingChart'), {
+        type: 'pie',
+        data: {
+            labels: ratingLabels,
+            datasets: [{
+                data: ratingData,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(255, 206, 86, 0.6)',
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+</script>

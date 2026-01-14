@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Category Details";
+    var category = ViewBag.Category;
+    var services = ViewBag.Services;
+}
+
+<div class="container mt-5 mb-5">
+
+    @if (category == null)
+    {
+        <div class="text-center">
+            <h3 class="fw-bold text-danger">Category not found</h3>
+        </div>
+        return;
+    }
+
+    <!-- Category Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold">@category.Category_name</h2>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="row">
+        @if (services != null && services.Count > 0)
+        {
+            foreach (var svc in services)
+            {
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <!-- Service Image -->
+                        <img src="@svc.ImagePath"
+                             class="card-img-top"
+                             alt="@svc.ServiceName"
+                             style="height:180px; object-fit:cover;"
+                             onerror="this.src='https://via.placeholder.com/300x180';" />
+
+                        <div class="card-body text-center d-flex flex-column justify-content-between">
+                            <h5 class="fw-semibold mb-2">@svc.ServiceName</h5>
+                            <p class="text-muted mb-3">₹ @svc.Pricing</p>
+
+                            <div class="d-flex gap-2 justify-content-center mt-auto">
+                                <a asp-controller="Home"
+                                   asp-action="ServiceMoreInfo"
+                                   asp-route-id="@svc.Service_Id"
+                                   class="btn btn-outline-dark btn-sm w-50">
+                                    Info
+                                </a>
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" class="w-50">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="serviceId" value="@svc.Service_Id" />
+                                    <button type="submit" class="btn btn-dark btn-sm w-100" style="color:white!important">
+                                        Add to Cart
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center">
+                <p class="text-muted">No services available under this category.</p>
+            </div>
+        }
+    </div>
+</div>

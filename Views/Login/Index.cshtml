@@ -1,0 +1,105 @@
+﻿@model ServiceProvidingCompany.Models.SignUp
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container signup-container">
+
+    <h2 id="loginHeader" class="text-center mb-3">
+        Login as Service Provider
+    </h2>
+
+    <!-- Role Toggle -->
+    <ul class="nav nav-pills mb-3 justify-content-center" id="roleToggle">
+        <li class="nav-item">
+            <button class="nav-link active"
+                    data-role="provider"
+                    type="button">
+                Service Provider
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link"
+                    data-role="consumer"
+                    type="button">
+                Consumer
+            </button>
+        </li>
+    </ul>
+
+    @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+    {
+        <!-- ✅ DEFAULT ROLE SET -->
+        <input type="hidden"
+               id="roleInput"
+               name="User_Role"
+               value="Service Provider" />
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            @Html.TextBoxFor(m => m.Email, new
+            {
+                @class = "form-control",
+                placeholder = "Enter your email"
+                })
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        @Html.PasswordFor(m => m.Password, new
+                {
+                @class = "form-control",
+                placeholder = "Enter your password"
+                })
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mt-2">
+        Login
+    </button>
+
+    <div class="d-flex justify-content-between mt-3 small">
+        <a href="#">Forgot Password?</a>
+        <a asp-controller="Auth" asp-action="SignUp">Create Account</a>
+    </div>
+        }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger mt-3">
+            @ViewBag.Error
+        </div>
+    }
+    @if (TempData["UnauthorisedAccess"] != null)
+    {
+        <div class="text-center mt-3">
+            @TempData["UnauthorisedAccess"]
+        </div>
+    }
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const tabs = document.querySelectorAll("#roleToggle .nav-link");
+        const header = document.getElementById("loginHeader");
+        const roleInput = document.getElementById("roleInput");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", function () {
+
+                tabs.forEach(t => t.classList.remove("active"));
+                this.classList.add("active");
+
+                const role = this.dataset.role;
+
+                // ✅ ALWAYS UPDATE HIDDEN INPUT
+                roleInput.value = role;
+
+                header.textContent =
+                    role === "Service Provider"
+                        ? "Login as Service Provider"
+                        : "Login as Consumer";
+            });
+        });
+    });
+</script>

@@ -1,0 +1,48 @@
+﻿@model List<dynamic>
+@{
+    ViewData["Title"] = "My Service Bookings";
+}
+
+<div class="container mt-5 mb-5">
+    <h2 class="fw-bold text-center mb-4">Bookings for Your Services</h2>
+
+    <div class="row g-4">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var booking in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm rounded-4 p-3 h-100">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="fw-bold mb-0">@booking.ServiceName</h5>
+                            <span class="badge
+                                          @(booking.Booking_Status == "Accepted" ? "bg-success" :
+                                                                      booking.Booking_Status == "Pending" ? "bg-warning text-dark" :
+                                                                      booking.Booking_Status == "Rejected" ? "bg-danger" :
+                                                                      "bg-secondary")">
+                                @booking.Booking_Status
+                            </span>
+                        </div>
+                        <p><strong>Consumer Email:</strong> @booking.Consumer_Email</p>
+                        <p><strong>Address:</strong> @booking.Address</p>
+                        <p><strong>Date:</strong> @booking.Date.ToString("dd MMM yyyy")</p>
+                        <p><strong>Time Slot 1:</strong> @booking.PreferredTimeSlot1.ToString(@"hh\:mm")</p>
+                        <p><strong>Time Slot 2:</strong> @booking.PreferredTimeSlot2.ToString(@"hh\:mm")</p>
+
+                        <div class="mt-3 text-center">
+                            <a asp-action="ViewBookingGetInfo" asp-route-id="@booking.Initial_Book_Id" asp-controller="ViewBooking" class="btn btn-primary btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center text-muted fw-semibold">
+                No bookings available for your services.
+            </div>
+        }
+    </div>
+</div>

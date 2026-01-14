@@ -1,0 +1,61 @@
+﻿@model ServiceProvidingCompany.Models.SignUp
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+
+            <div class="signup-container">
+
+                <!-- Header (white) -->
+                <div class="card-header text-center rounded-top-4">
+                    <h4 class="mb-0  fw-semibold">✏️ Edit Profile</h4>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4  rounded-bottom-4">
+
+                    <form asp-action="EditProfile" asp-controller="Profile" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label asp-for="Full_Name" class="form-label fw-semibold"></label>
+                            <input asp-for="Full_Name" class="form-control form-control-lg" />
+                            <span asp-validation-for="Full_Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label asp-for="Phone_Number" class="form-label fw-semibold"></label>
+                            <input asp-for="Phone_Number" class="form-control form-control-lg" />
+                            <span asp-validation-for="Phone_Number" class="text-danger"></span>
+                        </div>
+
+                        <!-- Read-only Email -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input class="form-control form-control-lg" value="@Model.Email" readonly />
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <a asp-action="Index" class="btn btn-success px-4 shadow-sm">
+                                ⬅ Back
+                            </a>
+                            <button type="submit" class="btn btn-success px-4 shadow-sm">
+                                💾 Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

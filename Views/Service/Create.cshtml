@@ -1,0 +1,258 @@
+﻿@model ServiceProvidingCompany.Models.ServiceProvider
+
+@{
+    ViewData["Title"] = "Register Service Provider";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<div class="container my-4 animate__animated animate__fadeIn blue-glow mt-0 mb-2">
+    <div class="card-body">
+        <h2 class="card-title text-center mb-4 mt-3">Service Provider Registration Form</h2>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data" class="row g-3">
+
+            <!-- ================= Service Info ================= -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Service Info</legend>
+
+                    <div class="mb-3">
+                        <label class="form-label">Service Name</label>
+                        <input asp-for="ServiceName" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input asp-for="Description" class="form-control" />
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Pricing</label>
+                            <input asp-for="Pricing" class="form-control" />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Duration</label>
+                            <input asp-for="Duration" class="form-control" />
+                        </div>
+
+                        <!-- Category Dropdown -->
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Category</label>
+                            <select asp-for="Category" class="form-control">
+                                <option value="">-- Select Category --</option>
+                                @foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat">@cat</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Upload Images</label>
+                        <input type="file" name="UploadedImages" class="form-control" />
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- ================= Availability ================= -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Availability</legend>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Working Hours Start</label>
+                            <input asp-for="WorkingHoursStart" type="time" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Working Hours End</label>
+                            <input asp-for="WorkingHoursEnd" type="time" class="form-control" />
+                        </div>
+                    </div>
+
+                    <!-- Weekly Schedule -->
+                    <div class="mb-3">
+                        <label class="form-label">Weekly Schedule</label>
+                        <div class="d-flex flex-wrap border rounded p-2">
+                            @foreach (var day in new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" })
+                            {
+                                <div class="form-check me-3">
+                                    <input class="form-check-input week-check" type="checkbox" value="@day" />
+                                    <label class="form-check-label">@day</label>
+                                </div>
+                            }
+                        </div>
+                        <input type="hidden" asp-for="WeeklySchedule" id="WeeklySchedule" />
+                    </div>
+                    <!-- Time Slots -->
+                    <div class="mb-3">
+                        <label class="form-label">Time Slots</label>
+                        <div class="d-flex flex-wrap border rounded p-2">
+                            @foreach (var slot in new[] { "Morning", "Afternoon", "Evening" })
+                            {
+                                <div class="form-check me-3">
+                                    <input class="form-check-input slot-check" type="checkbox" value="@slot" />
+                                    <label class="form-check-label">@slot</label>
+                                </div>
+                            }
+                        </div>
+                        <input type="hidden" asp-for="TimeSlots" id="TimeSlots" />
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- ================= Location ================= -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Location</legend>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">City</label>
+                            <input asp-for="City" class="form-control" />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Pin Code</label>
+                            <input asp-for="PinCode" class="form-control" />
+                        </div>
+
+                        <!-- Radius (UNCHANGED) -->
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Radius (km)</label>
+                            <input type="range" class="form-range" min="1" max="100" step="1" id="radiusRange" />
+                            <span id="radiusValue" class="fw-bold">10 km</span>
+                            <input type="hidden" asp-for="Radius" id="Radius" />
+                        </div>
+                    </div>
+
+                    <!-- Address (UNCHANGED) -->
+                    <div id="address-container" class="mb-3">
+                        <label class="form-label">Addresses</label>
+                        <input type="text" name="addresses" class="form-control mb-2" />
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addAddress()">+ Add Address</button>
+                </fieldset>
+            </div>
+
+            <!-- ================= Profile & Verification ================= -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Profile & Verification</legend>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input asp-for="FullName" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input asp-for="Phone" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Business Name</label>
+                            <input asp-for="BusinessName" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div id="docs-container" class="mb-3">
+                        <label class="form-label">Verification Docs</label>
+                        <input type="file" name="verificationDocs" class="form-control mb-2" />
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addDoc()">+ Add Document</button>
+                </fieldset>
+            </div>
+
+            <!-- ================= Notifications ================= -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Notifications</legend>
+
+                    <div class="form-check">
+                        <input asp-for="NotifyEmail" class="form-check-input" />
+                        <label class="form-check-label">Email</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="NotifySms" class="form-check-input" />
+                        <label class="form-check-label">SMS</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="NotifyApp" class="form-check-input" />
+                        <label class="form-check-label">App</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- ================= Submit ================= -->
+            <div class="col-12 text-center mb-4">
+                <button type="submit" class="btn btn-success px-5 mt-3">Submit</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<style>
+    .blue-glow {
+        box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.7);
+        border-radius: 15px;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function addAddress() {
+            const c = document.getElementById("address-container");
+            const i = document.createElement("input");
+            i.type = "text";
+            i.name = "addresses";
+            i.className = "form-control mb-2";
+            c.appendChild(i);
+        }
+
+        function addDoc() {
+            const c = document.getElementById("docs-container");
+            const i = document.createElement("input");
+            i.type = "file";
+            i.name = "verificationDocs";
+            i.className = "form-control mb-2";
+            c.appendChild(i);
+        }
+
+        function sync(selector, hiddenId) {
+            document.getElementById(hiddenId).value =
+                Array.from(document.querySelectorAll(selector + ":checked"))
+                    .map(x => x.value)
+                    .join("|");
+        }
+
+        document.querySelectorAll(".week-check")
+            .forEach(cb => cb.addEventListener("change", () =>
+                sync(".week-check", "WeeklySchedule")));
+
+        document.querySelectorAll(".slot-check")
+            .forEach(cb => cb.addEventListener("change", () =>
+                sync(".slot-check", "TimeSlots")));
+
+        const r = document.getElementById("radiusRange");
+        const rv = document.getElementById("radiusValue");
+        r.addEventListener("input", () => {
+            rv.innerText = r.value + " km";
+            document.getElementById("Radius").value = r.value;
+        });
+    </script>
+}

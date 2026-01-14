@@ -1,0 +1,136 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Booking Details";
+
+    var status = (Model?.Booking_Status ?? "Pending").ToString();
+
+    bool isAccepted = status.Equals("Accepted", StringComparison.OrdinalIgnoreCase);
+    bool isRejected = status.Equals("Rejected", StringComparison.OrdinalIgnoreCase);
+    bool isCompleted = status.Equals("Completed", StringComparison.OrdinalIgnoreCase);
+
+    bool isFinal = isRejected || isCompleted;
+}
+
+<div class="container mt-5 mb-5">
+    <h2 class="fw-bold text-center mb-5">Booking Details</h2>
+
+    @if (Model != null)
+    {
+        <div class="card shadow-lg rounded-4 mx-auto" style="max-width:700px; border:1px solid #ddd;">
+
+            <!-- Booking Header -->
+            <div class="card-header bg-dark text-white rounded-top">
+                <h4 class="mb-0" style="color:white!important">Booking Info</h4>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Consumer Info -->
+                <h5 class="fw-bold text-primary mb-3">Consumer Information</h5>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Name:</strong> @(Model.Full_Name ?? "N/A")</div>
+                    <div class="col-md-6"><strong>Email:</strong> @(Model.Email ?? "N/A")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Phone:</strong> @(Model.Phone_Number ?? "N/A")</div>
+                    <div class="col-md-6"><strong>Address:</strong> @(Model.Address ?? "N/A")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Landmark:</strong> @(Model.Landmark ?? "N/A")</div>
+                    <div class="col-md-6"><strong>Date:</strong> @(Model.Date != null ? ((DateTime)Model.Date).ToString("dd MMM yyyy") : "N/A")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Time Slot 1:</strong> @(Model.PreferredTimeSlot1 != null ? Model.PreferredTimeSlot1.ToString(@"hh\:mm") : "N/A")</div>
+                    <div class="col-md-6"><strong>Time Slot 2:</strong> @(Model.PreferredTimeSlot2 != null ? Model.PreferredTimeSlot2.ToString(@"hh\:mm") : "N/A")</div>
+                </div>
+                <p><strong>Notes:</strong> @(Model.Notes ?? "None")</p>
+                 
+
+                <!-- Status Badge -->
+                <p>
+                    <strong>Status:</strong>
+                    <span class="badge
+                            @(isCompleted ? "bg-success" : isRejected ? "bg-danger" : isAccepted ? "bg-primary" : "bg-warning")
+                            text-white">
+                        @status
+                    </span>
+                </p>
+
+                <hr />
+
+                <!-- Service Info -->
+                <h5 class="fw-bold text-primary mb-3">Service Details</h5>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Service ID:</strong> @(Model.Service_Id ?? "N/A")</div>
+                    <div class="col-md-6"><strong>Name:</strong> @(Model.ServiceName ?? "N/A")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Category:</strong> @(Model.Category ?? "N/A")</div>
+                    <div class="col-md-6"><strong>Pricing:</strong> ₹@(Model.Pricing ?? "0")</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong>Pay Via:</strong> @(Model.Payment ?? "N/A")</div>
+                </div>
+
+                <hr />
+
+                <!-- ACTION BUTTONS -->
+                @if (!isFinal && !isAccepted)
+                {
+                    <div class="mt-4 d-flex justify-content-center gap-3">
+                        <form asp-action="AcceptBooking" asp-controller="ViewBooking" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Initial_Book_Id" />
+                            <button type="submit" class="btn btn-success px-4">
+                                Accept Booking
+                            </button>
+                        </form>
+
+                        <form asp-action="RejectBooking" asp-controller="ViewBooking" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Initial_Book_Id" />
+                            <button type="submit" class="btn btn-danger px-4">
+                                Reject Booking
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                @if (isAccepted)
+                {
+                    <div class="mt-4 text-center">
+                        <form id="completeBookingForm" asp-action="CompleteBooking" asp-controller="ViewBooking" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@Model.Initial_Book_Id" />
+                            <button type="button" class="btn btn-primary px-4" onclick="confirmCompletion()">
+                                Mark as Completed
+                            </button>
+                        </form>
+                    </div>
+                }
+
+                @if (isFinal)
+                {
+                    <div class="text-center text-muted mt-4">
+                        This booking has been <strong>@status</strong>.
+                    </div>
+                }
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center text-muted fw-semibold mt-5">
+            Booking details not found.
+        </div>
+    }
+</div>
+
+<script>
+    function confirmCompletion() {
+        if (confirm("Are you sure you want to mark this booking as completed? This action cannot be undone.")) {
+            document.getElementById("completeBookingForm").submit();
+        }
+    }
+</script>

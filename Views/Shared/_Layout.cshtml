@@ -1,0 +1,188 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ServiceProvidingCompany</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ServiceProvidingCompany.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    @{
+        // Read cookies
+        string email = HttpContextAccessor.HttpContext?.Request.Cookies["UserEmail"];
+        string userName = HttpContextAccessor.HttpContext?.Request.Cookies["UserName"];
+        string role = HttpContextAccessor.HttpContext?.Request.Cookies["UserRole"];
+
+        bool isLoggedIn = !string.IsNullOrEmpty(email);
+
+        string consumer = "consumer";
+        string provider = "provider";
+    }
+
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container-fluid">
+
+                <!-- Brand -->
+                <a class="navbar-brand" href="/">Service Company</a>
+
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+
+                    <!-- Search -->
+                    <div class="mx-auto">
+                        <form class="d-flex align-items-center"
+                              asp-controller="Home"
+                              asp-action="SearchView"
+                              method="get">
+                            <input class="form-control search-pill"
+                                   type="search"
+                                   name="search"
+                                   placeholder="Search services..." />
+                            <button class="btn" type="submit">🔎</button>
+                        </form>
+                    </div>
+
+                    <!-- NAV LINKS -->
+                    <ul class="navbar-nav align-items-center ms-auto">
+                        <!-- Consumer Menu -->
+                        <!-- CONSUMER MENU -->
+                        @if (isLoggedIn && role == consumer)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Cart" asp-action="CartHome">Cart</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="SettingsHome" asp-controller="Settings">Settings</a>
+                            </li>
+                        }
+
+                        <!-- SERVICE PROVIDER MENU -->
+                        @if (isLoggedIn && role == provider)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Dashboard" asp-action="Dashboardview">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="Create" asp-controller="Service">Add Service</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="ViewBookingHome" asp-controller="ViewBooking">View Bookings</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="ContactUs" asp-controller="Settings">Contact Us</a>
+                            </li>
+                        }
+
+                        <!-- Theme Toggle -->
+                        <li class="nav-item ms-2">
+                            <button id="themeToggle"
+                                    onclick="toggleTheme()"
+                                    class="btn btn-sm theme-toggle-btn"
+                                    title="Toggle dark mode">
+                                🌙
+                            </button>
+                        </li>
+
+                        <!-- Profile / Login -->
+                        @if (isLoggedIn)
+                        {
+                            <li class="nav-item dropdown ms-2">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                    @userName
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <span class="dropdown-item-text text-muted">@email</span>
+                                    </li>
+                                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index">Profile</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger"
+                                           asp-controller="Login"
+                                           asp-action="Logout">
+                                            Logout
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item ms-2">
+                                <a class="btn btn-outline-light rounded-pill login"
+                                   asp-controller="Login"
+                                   asp-action="Index">
+                                    Login / Sign Up
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" style="margin-top:20px;">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <hr />
+            <div class="text-center small">
+                © 2025 ServiceProvidingCompany. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const navbar = document.querySelector('.navbar');
+        const themeBtn = document.getElementById('themeToggle');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled', 'shrink');
+            } else {
+                navbar.classList.remove('scrolled', 'shrink');
+            }
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            themeBtn.textContent =
+                document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+        }
+    </script>
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+@model ServiceProvidingCompany.Models.ServiceProvider
+
+@{
+    ViewData["Title"] = "Register Service Provider";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<div class="container my-4 animate__animated animate__fadeIn blue-glow mt-0 mb-2">
+
+    <div class="card-body">
+        <h2 class="card-title text-center mb-4 mt-3">Service Provider Registration Form</h2>
+
+        <form asp-action="Create" method="post" enctype="multipart/form-data" class="row g-3">
+
+            <!-- Service Info -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Service Info</legend>
+                    <div class="mb-3">
+                        <label class="form-label">Service Name</label>
+                        <input asp-for="ServiceName" class="form-control" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input asp-for="Description" class="form-control" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Pricing</label>
+                            <input asp-for="Pricing" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Duration</label>
+                            <input asp-for="Duration" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Category</label>
+                            <input asp-for="Category" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload Images</label>
+                        <input type="file" name="UploadedImages" class="form-control" />
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Availability -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Availability</legend>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Working Hours Start</label>
+                            <input asp-for="WorkingHoursStart" class="form-control" placeholder="Start" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Working Hours End</label>
+                            <input asp-for="WorkingHoursEnd" class="form-control" placeholder="End" />
+                        </div>
+                    </div>
+
+                    <!-- Weekly Schedule Drag & Drop -->
+                    <div class="mb-3">
+                        <label class="form-label">Weekly Schedule</label>
+                        <div class="d-flex flex-wrap border rounded p-2" id="days-container">
+                            <div class="draggable badge bg-primary m-1" draggable="true">Mon</div>
+                            <div class="draggable badge bg-primary m-1" draggable="true">Tue</div>
+                            <div class="draggable badge bg-primary m-1" draggable="true">Wed</div>
+                            <div class="draggable badge bg-primary m-1" draggable="true">Thu</div>
+                            <div class="draggable badge bg-primary m-1" draggable="true">Fri</div>
+                            <div class="draggable badge bg-primary m-1" draggable="true">Sat</div>
+                            <div class="draggable badge bg-primary m-1" draggable="true">Sun</div>
+                        </div>
+                        <div class="border rounded p-3 mt-2 bg-light" id="schedule-dropzone">
+                            <p class="text-muted">Drag days here to set schedule</p>
+                        </div>
+                        <input type="hidden" asp-for="WeeklySchedule" id="WeeklySchedule" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Block Dates</label>
+                        <input asp-for="BlockDates" class="form-control" />
+                    </div>
+
+                    <!-- Time Slots Drag & Drop -->
+                    <div class="mb-3">
+                        <label class="form-label">Time Slots</label>
+                        <div class="d-flex flex-wrap border rounded p-2" id="slots-container">
+                            <div class="draggable badge bg-info m-1" draggable="true">Morning</div>
+                            <div class="draggable badge bg-info m-1" draggable="true">Afternoon</div>
+                            <div class="draggable badge bg-info m-1" draggable="true">Evening</div>
+                        </div>
+                        <div class="border rounded p-3 mt-2 bg-light" id="slots-dropzone">
+                            <p class="text-muted">Drag slots here to set availability</p>
+                        </div>
+                        <input type="hidden" asp-for="TimeSlots" id="TimeSlots" />
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Location -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Location</legend>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">City</label>
+                            <input asp-for="City" class="form-control" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Pin Code</label>
+                            <div class="d-flex flex-wrap border rounded p-2" id="pin-container">
+                                <div class="draggable badge bg-secondary m-1" draggable="true">1</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">2</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">3</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">4</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">5</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">6</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">7</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">8</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">9</div>
+                                <div class="draggable badge bg-secondary m-1" draggable="true">0</div>
+                            </div>
+                            <div class="border rounded p-3 mt-2 bg-light" id="pin-dropzone">
+                                <p class="text-muted">Drag numbers here to form Pin Code</p>
+                            </div>
+                            <input type="hidden" asp-for="PinCode" id="PinCode" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Radius (km)</label>
+                            <input type="range" class="form-range" min="1" max="100" step="1" id="radiusRange" />
+                            <span id="radiusValue" class="fw-bold">10 km</span>
+                            <input type="hidden" asp-for="Radius" id="Radius" />
+                        </div>
+                    </div>
+
+                    <div id="address-container" class="mb-3">
+                        <label class="form-label">Addresses</label>
+                        <input type="text" name="addresses" class="form-control mb-2" />
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addAddress()">+ Add Address</button>
+                </fieldset>
+            </div>
+
+            <!-- Profile & Verification -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Profile & Verification</legend>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input asp-for="FullName" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input asp-for="Phone" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Business Name</label>
+                            <input asp-for="BusinessName" class="form-control" />
+                        </div>
+                    </div>
+                    <div id="docs-container" class="mb-3">
+                        <label class="form-label">Verification Docs</label>
+                        <input type="file" name="verificationDocs" class="form-control mb-2" />
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addDoc()">+ Add Document</button>
+                </fieldset>
+            </div>
+
+            <!-- Notifications -->
+            <div class="col-12">
+                <fieldset class="border p-3 rounded">
+                    <legend class="fw-bold">Notifications</legend>
+                    <div class="form-check">
+                        <input asp-for="NotifyEmail" type="checkbox" class="form-check-input" />
+                        <label class="form-check-label">Email</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="NotifySms" type="checkbox" class="form-check-input" />
+                        <label class="form-check-label">SMS</label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="NotifyApp" type="checkbox" class="form-check-input" />
+                        <label class="form-check-label">App</label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Submit -->
+            <div class="col-12 text-center mb-4">
+                <button type="submit" class="btn btn-success px-5 mt-3">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+<style>
+    .blue-glow {
+        box-shadow: 0 0 20px 5px rgba(0, 0, 255, 0.7);
+        transition: box-shadow 0.3s ease;
+        border-radius: 15px; /* Curved corners */
+    }
+
+        .blue-glow:hover {
+            box-shadow: 0 0 40px 10px rgba(0, 0, 255, 0.9);
+        }
+
+</style>
+@section Scripts {
+    <script>
+        // Add extra address field
+        function addAddress() {
+            var container = document.getElementById("address-container");
+            var input = document.createElement("input");
+            input.type = "text";
+            input.name = "addresses";
+            input.className = "form-control mb-2";
+            container.appendChild(input);
+        }
+        // Add extra document upload field
+        function addDoc() {
+            var container = document.getElementById("docs-container");
+            var input = document.createElement("input");
+            input.type = "file";
+            input.name = "verificationDocs";
+            input.className = "form-control mb-2";
+            container.appendChild(input);
+        }
+        // Drag & Drop logic for all draggable items
+        document.querySelectorAll('.draggable').forEach(item => {
+            item.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text', e.target.innerText);
+            });
+        });
+        // Weekly schedule drop
+        let scheduleDrop = document.getElementById("schedule-dropzone");
+        scheduleDrop.addEventListener('dragover', e => e.preventDefault());
+        scheduleDrop.addEventListener('drop', e => {
+            e.preventDefault();
+            let day = e.dataTransfer.getData('text');
+            scheduleDrop.innerHTML += `<span class="badge bg-success m-1">${day}</span>`;
+            document.getElementById("WeeklySchedule").value += day + "|";
+        });
+        // Pin code drop
+        let pinDrop = document.getElementById("pin-dropzone");
+        pinDrop.addEventListener('dragover', e => e.preventDefault());
+        pinDrop.addEventListener('drop', e => {
+            e.preventDefault();
+            let num = e.dataTransfer.getData('text');
+            pinDrop.innerHTML += `<span class="badge bg-dark text-white m-1">${num}</span>`;
+            document.getElementById("PinCode").value += num;
+        });
+
+        // Radius slider
+        let radiusRange = document.getElementById("radiusRange");
+        let radiusValue = document.getElementById("radiusValue");
+        radiusRange.addEventListener("input", function () {
+            radiusValue.innerText = this.value + " km";
+            document.getElementById("Radius").value = this.value;
+        });
+
+        // Time slots drop
+        let slotsDrop = document.getElementById("slots-dropzone");
+        slotsDrop.addEventListener('dragover', e => e.preventDefault());
+        slotsDrop.addEventListener('drop', e => {
+            e.preventDefault();
+            let slot = e.dataTransfer.getData('text');
+            slotsDrop.innerHTML += `<span class="badge bg-warning text-dark m-1">${slot}</span>`;
+            document.getElementById("TimeSlots").value += slot + "|";
+        });
+    </script>
+}

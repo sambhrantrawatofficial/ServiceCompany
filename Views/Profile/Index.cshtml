@@ -1,0 +1,62 @@
+﻿@model ServiceProvidingCompany.Models.SignUp
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+
+            <div class="signup-container">
+
+                <!-- Header -->
+                <div style="text-align:center">
+                    <h4 class="mb-0">👤 My Profile</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <!-- Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input class=" form-control form-control-lg"
+                               value="@Model.Full_Name"
+                               readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <input class="form-control "
+                               value="@Model.Email"
+                               readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Phone Number</label>
+                        <input class="form-control"
+                               value="@Model.Phone_Number"
+                               readonly />
+                    </div>
+
+
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a asp-action="Edit"
+                           class="btn btn-outline-primary px-4 shadow-sm">
+                            ✏️ Edit
+                        </a>
+
+                        <a asp-action="Delete"
+                           class="btn btn-outline-danger px-4 shadow-sm">
+                            🗑 Delete
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

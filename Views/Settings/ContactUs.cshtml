@@ -1,0 +1,126 @@
+﻿@model ContactUsViewModel
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+<style>
+    .social-iframe {
+        width: 26px;
+        height: 26px;
+        overflow: hidden;
+    }
+
+    .social-iframe iframe {
+            width: 26px;
+            height: 26px;
+            border: none;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+
+    <!-- Hero -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-5">We’d Love to Hear From You</h2>
+        <p class="lead text-muted">
+            Have questions, feedback, or need support? Our team is ready to assist you.
+        </p>
+    </div>
+
+    @if (TempData["ContactUsSuccess"] != null)
+    {
+        <div class="alert alert-success text-center fw-semibold">
+            @TempData["ContactUsSuccess"]
+        </div>
+    }
+
+    <div class="row gx-5 align-items-stretch">
+
+        <!-- Contact Form -->
+        <div class="col-lg-7 mb-4 d-flex">
+            <div class="card shadow-sm rounded-4 border-0 p-4 p-lg-5 flex-fill">
+                <h4 class="fw-bold mb-4">Send Us a Message</h4>
+
+                <form asp-action="Query" asp-controller="Settings" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input asp-for="QueryForm.Full_Name"
+                               class="form-control form-control-lg"
+                               required minlength="3"
+                               placeholder="John Doe" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <input asp-for="QueryForm.Email"
+                               type="email"
+                               class="form-control form-control-lg"
+                               minlength="5"
+                               placeholder="john@example.com" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Message</label>
+                        <textarea asp-for="QueryForm.Message"
+                                  class="form-control form-control-lg"
+                                  rows="3"
+                                  minlength="10"
+                                  placeholder="Tell us how we can help you..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100 fw-bold py-3" style="color:white!important">
+                        📩 Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-lg-5 mb-4 d-flex">
+            <div class="card shadow-sm rounded-4 border-0 p-4 p-lg-5 flex-fill h-100">
+                <h4 class="fw-bold mb-4 text-center">Contact Info</h4>
+
+                <!--Contact category-->
+                @foreach (var info in Model.ContactInfos
+                                .Where(c => c.Contact_Info_Category == "Contact"))
+                {
+                    <div class="mb-4">
+                        <h6 class="fw-semibold mb-1">@info.Content_Heading</h6>
+                        <p class="text-muted mb-0">@info.Content</p>
+                        @if (!string.IsNullOrEmpty(info.Url))
+                        {
+                            @Html.Raw(info.Url)
+                        }
+                    </div>
+                }
+
+                <!--Social Category-->
+                @{
+                    var socialInfos = Model.ContactInfos
+                    .Where(c => c.Contact_Info_Category == "Social")
+                    .ToList();
+                }
+
+                @if (socialInfos.Any())
+                {
+                    <h5 class="fw-semibold mb-3">Follow Us</h5>
+
+                    <div class="d-flex gap-3 align-items-center">
+                        @foreach (var s in socialInfos)
+                        {
+                            <div class="social-iframe">
+                                @Html.Raw(s.Url)
+                            </div>
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+</div>

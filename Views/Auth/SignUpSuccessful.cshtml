@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Signup Success";
+}
+
+<div class="d-flex align-items-center justify-content-center signup-success-wrapper">
+    <div class="card signup-success-card w-100 p-4 text-center" style="max-width: 450px;">
+
+        <div class="card-body p-4">
+
+            <!-- Success Icon -->
+            <div class="mb-3">
+                <div class="signup-success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="36" height="36" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.08.02l3.992-4.99a.75.75 0 1 0-1.14-.976L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06l2.646 2.647z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Text -->
+            <h4 class="fw-semibold mb-2">Account Created Successfully</h4>
+            <p class="small mb-4">
+                Your account has been created. You can now log in and start using the platform.
+            </p>
+
+            <!-- Action -->
+            <a asp-controller="Login"
+               asp-action="Index"
+               class="btn btn-success w-100 fw-medium">
+                Go to Login
+            </a>
+
+        </div>
+    </div>
+</div>
